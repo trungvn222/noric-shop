@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react';
-import Currency from '../Currency';
+import ProductThumbnail from '../ProductThumbnail';
+import ProductStatus from '../ProductStatus';
+import ProductTitle from '../ProductTitle';
+import ProductPrice from '../ProductPrice';
 import './style.css';
 
 class Product extends PureComponent {
@@ -8,23 +11,13 @@ class Product extends PureComponent {
         return (
             <div className="product-item men">
                 <div className="product discount product_filter">
-                    <div className="product_image">
-                        <img src={thumbnail} alt={name} />
-                    </div>
+                    <ProductThumbnail thumbnail={thumbnail} alt={name} />
                     <div className="favorite favorite_left"></div>
-					{
-                        isSale && <div className="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>{discount ? <Currency price={discount}/> : 'Sale'}</span></div>
-                    }
-                    {
-                        isNew && <div className="product_bubble product_bubble_left product_bubble_green d-flex flex-column align-items-center"><span>new</span></div>
-                    }
+					<ProductStatus isNew={isNew} isSale={isSale} discount={discount} />
                     
                     <div className="product_info">
-                        <h6 className="product_name"><a href={link}>{name}</a></h6>
-                        {
-                            !salePrice ? <div className="product_price"><Currency price={regularPrice} /></div> : <div className="product_price"><Currency price={salePrice} /><span><Currency price={regularPrice} /></span></div>
-                        }
-                        
+                        <ProductTitle name={name} link={link} />
+                        <ProductPrice regularPrice={regularPrice} salePrice={salePrice} />
                     </div>
                 </div>
                 <div className="red_button add_to_cart_button"><a href="#">add to cart</a></div>

@@ -1,7 +1,7 @@
 export default [
     {
         id: 1,
-        category: [1],
+        categories: [3],
         name: 'Fujifilm X100T 16 MP Digital Camera (Silver)',
         thumbnail: 'images/product_1.png',
         discount: 20,
@@ -13,7 +13,7 @@ export default [
     },
     {
         id: 2,
-        category: [1],
+        categories: [1],
         name: 'Samsung CF591 Series Curved 27-Inch FHD Monitor',
         thumbnail: 'images/product_2.png',
         discount: 0,
@@ -24,7 +24,7 @@ export default [
     },
     {
         id: 3,
-        category: [1],
+        categories: [1],
         name: 'Blue Yeti USB Microphone Blackout Edition',
         thumbnail: 'images/product_3.png',
         discount: 0,
@@ -35,7 +35,7 @@ export default [
     },
     {
         id: 4,
-        category: [1],
+        categories: [2],
         name: 'DYMO LabelWriter 450 Turbo Thermal Label Printer',
         thumbnail: 'images/product_4.png',
         discount: 0,
@@ -46,7 +46,7 @@ export default [
     },
     {
         id: 5,
-        category: [1],
+        categories: [1,3],
         name: 'Pryma Headphones, Rose Gold & Grey',
         thumbnail: 'images/product_5.png',
         discount: 0,
@@ -57,7 +57,7 @@ export default [
     },
     {
         id: 6,
-        category: [1],
+        categories: [2],
         name: 'Fujifilm X100T 16 MP Digital Camera (Silver)',
         thumbnail: 'images/product_6.png',
         discount: 20,
@@ -68,7 +68,7 @@ export default [
     },
     {
         id: 7,
-        category: [1],
+        categories: [1],
         name: 'Samsung CF591 Series Curved 27-Inch FHD Monitor',
         thumbnail: 'images/product_7.png',
         discount: 0,
@@ -79,7 +79,7 @@ export default [
     },
     {
         id: 8,
-        category: [1],
+        categories: [2],
         name: 'Blue Yeti USB Microphone Blackout Edition',
         thumbnail: 'images/product_8.png',
         discount: 0,
@@ -90,7 +90,7 @@ export default [
     },
     {
         id: 9,
-        category: [1],
+        categories: [3],
         name: 'DYMO LabelWriter 450 Turbo Thermal Label Printer',
         thumbnail: 'images/product_9.png',
         discount: 0,
@@ -101,7 +101,7 @@ export default [
     },
     {
         id: 10,
-        category: [1],
+        categories: [3],
         name: 'Pryma Headphones, Rose Gold & Grey',
         thumbnail: 'images/product_10.png',
         discount: 0,

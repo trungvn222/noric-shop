@@ -12,12 +12,12 @@ import './style.css';
 
 class Home extends PureComponent {
     render() {
-        const {categories, products} = this.props;
+        const {categories, products, onFilterProducts, selectedCategory} = this.props;
         return (
             <React.Fragment>
                 <Slider />
                 <QuickCategories categories={categories} />
-                <NewArrival categories={categories} products={products} />
+                <NewArrival selectedCategory={selectedCategory} categories={categories} products={products} onFilterProducts= { onFilterProducts }  />
                 <DealOfTheWeek />
                 <ShippingInformationBar />
             </React.Fragment>

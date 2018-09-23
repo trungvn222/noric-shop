@@ -14,6 +14,8 @@ import languages from './data/languages';
 import categories from './data/categories';
 import products from './data/products';
 
+const filter = (p, cat = 0) => !cat || p.categories.indexOf(cat) >= 0;
+
 class App extends Component {
     state = {
         languages,
@@ -22,15 +24,23 @@ class App extends Component {
         cart : {
             cartUrl : '#',
             itemCount: 2
-        }
+        },
+        selectedCategory: 0
+    }
+    filterProducts(cat){
+        this.setState({
+            selectedCategory: cat
+        });
     }
     render() {
-        const {categories, products, languages, cart} = this.state;
+        const {categories, products, languages, cart, selectedCategory} = this.state;
+        const newProducts = products.filter(p => filter(p, selectedCategory) );
+
         return (
             <div className="super_container">
                 <Header languages={languages} cart={cart} topText='free shipping on all u.s orders over $50' />
                 <Hamburger languages={languages} />
-                <Home categories={categories} products={products} />
+                <Home categories={categories} selectedCategory={selectedCategory} products={newProducts} onFilterProducts = { this.filterProducts.bind(this) } />
                 <Footer />
             </div>
         );

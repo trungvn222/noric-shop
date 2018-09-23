@@ -3,17 +3,20 @@ import ProductsFilterItem from '../ProductsFilterItem';
 import './style.css';
 
 class ProductsFilter extends PureComponent {
+
+    
+
     render() {
-        const {categories} = this.props;
+        const {categories, onFilterProducts, selectedCategory} = this.props;
         if(!categories){
             return null;
         }
         return (
                 <div className="new_arrivals_sorting">
                 <ul className="arrivals_grid_sorting clearfix button-group filters-button-group">
-                    <ProductsFilterItem key='all' name='All' active={true} />
+                    <ProductsFilterItem key='all' name='All' onClick={ () => onFilterProducts(0) } active={ 0 === selectedCategory } />
                     {
-                        categories.map( c => <ProductsFilterItem key={c.id} {...c} active={false} /> )
+                        categories.map( c => <ProductsFilterItem onClick={ () => onFilterProducts(c.id) } key={c.id} {...c} active={ c.id === selectedCategory } /> )
                     }
                 </ul>
             </div>

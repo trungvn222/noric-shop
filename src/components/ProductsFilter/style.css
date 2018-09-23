@@ -7,10 +7,6 @@
 }
 .grid_sorting_button
 {
-	height: 40px;
-	min-width: 102px;
-	padding-left: 25px;
-	padding-right: 25px;
 	cursor: pointer;
 	border: solid 1px #ebebeb;
 	font-size: 14px;
@@ -22,6 +18,15 @@
 	float: left;
 	margin-left: -1px;
 }
+.grid_sorting_button a {
+	height: 40px;
+	line-height: 40px;
+	min-width: 102px;
+	padding-left: 25px;
+	padding-right: 25px;
+	display: block;
+}
+
 .grid_sorting_button:first-child
 {
 	margin-left: 0px;

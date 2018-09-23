@@ -62,3 +62,16 @@
 	width: 140px;
 	margin-top: 32px;
 }
+
+@media only screen and (max-width: 1199px)
+{
+	.main_slider
+	{
+		min-height: 475px;
+		height: calc(100vw / 1.714);
+	}
+	.main_slider_content
+	{
+		width: 80%;
+	}
+}

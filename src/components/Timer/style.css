@@ -29,3 +29,22 @@
 	font-weight: 500;
 	color: #51545f;
 }
+
+@media only screen and (max-width: 1199px)
+{
+	.timer li
+	{
+		width: 90px;
+		height: 90px;
+	}
+	.timer_num
+	{
+		font-size: 36px;
+		font-weight: 500;
+	}
+	.timer_unit
+	{
+		margin-top: 5px;
+	}
+	
+}
