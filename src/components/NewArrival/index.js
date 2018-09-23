@@ -1,4 +1,6 @@
 import React, { PureComponent } from 'react';
+import ProductsFilter from '../ProductsFilter';
+import Products from '../Products';
 import './style.css';
 
 class NewArrival extends PureComponent {

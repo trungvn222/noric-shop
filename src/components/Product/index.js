@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import Currency from '../Price';
+import Currency from '../Currency';
 import './style.css';
 
 class Product extends PureComponent {
