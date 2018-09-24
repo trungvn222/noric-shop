@@ -7,7 +7,7 @@ import './style.css';
 
 class Product extends PureComponent {
     render() {
-        const {thumbnail, sale, regularPrice, salePrice, name, link, isNew, isSale, discount} = this.props;
+        const {thumbnail, sale, originalPrice, salePrice, name, link, isNew, isSale, discount} = this.props;
         return (
             <div className="product-item men">
                 <div className="product discount product_filter">
@@ -17,7 +17,7 @@ class Product extends PureComponent {
                     
                     <div className="product_info">
                         <ProductTitle name={name} link={link} />
-                        <ProductPrice regularPrice={regularPrice} salePrice={salePrice} />
+                        <ProductPrice originalPrice={originalPrice} salePrice={salePrice} />
                     </div>
                 </div>
                 <div className="red_button add_to_cart_button"><a href="#">add to cart</a></div>

@@ -1,113 +1,20 @@
-export default [
-    {
-        id: 1,
-        categories: [3],
-        name: 'Fujifilm X100T 16 MP Digital Camera (Silver)',
-        thumbnail: 'images/product_1.png',
-        discount: 20,
-        isNew: false,
-        isSale: true,
-        regularPrice: 540,
-        salePrice: 520,
+import API from './restAPI';
+export default {
+    products : function(callback) {
+        return fetch(API.products.get).then( res => {
+            return res.json()
+        } ).then( res => { 
+            var newData = [];
+            console.log(res.body);
+            res.body.length && res.body.map( (p) => {
+                var newP = p;
+                newP['discount'] = p.originalPrice - p.salePrice;
+                newP['isSale'] = (p.originalPrice - p.salePrice) !== 0;
+                newP['isNew'] = false;
 
-    },
-    {
-        id: 2,
-        categories: [1],
-        name: 'Samsung CF591 Series Curved 27-Inch FHD Monitor',
-        thumbnail: 'images/product_2.png',
-        discount: 0,
-        isNew: true,
-        isSale: false,
-        regularPrice: 610,
-        salePrice: 0,
-    },
-    {
-        id: 3,
-        categories: [1],
-        name: 'Blue Yeti USB Microphone Blackout Edition',
-        thumbnail: 'images/product_3.png',
-        discount: 0,
-        isNew: false,
-        isSale: true,
-        regularPrice: 120,
-        salePrice: 0,
-    },
-    {
-        id: 4,
-        categories: [2],
-        name: 'DYMO LabelWriter 450 Turbo Thermal Label Printer',
-        thumbnail: 'images/product_4.png',
-        discount: 0,
-        isNew: false,
-        isSale: false,
-        regularPrice: 410,
-        salePrice: 0,
-    },
-    {
-        id: 5,
-        categories: [1,3],
-        name: 'Pryma Headphones, Rose Gold & Grey',
-        thumbnail: 'images/product_5.png',
-        discount: 0,
-        isNew: false,
-        isSale: false,
-        regularPrice: 180,
-        salePrice: 0,
-    },
-    {
-        id: 6,
-        categories: [2],
-        name: 'Fujifilm X100T 16 MP Digital Camera (Silver)',
-        thumbnail: 'images/product_6.png',
-        discount: 20,
-        isNew: false,
-        isSale: true,
-        regularPrice: 540,
-        salePrice: 520,
-    },
-    {
-        id: 7,
-        categories: [1],
-        name: 'Samsung CF591 Series Curved 27-Inch FHD Monitor',
-        thumbnail: 'images/product_7.png',
-        discount: 0,
-        isNew: false,
-        isSale: false,
-        regularPrice: 610,
-        salePrice: 0,
-    },
-    {
-        id: 8,
-        categories: [2],
-        name: 'Blue Yeti USB Microphone Blackout Edition',
-        thumbnail: 'images/product_8.png',
-        discount: 0,
-        isNew: false,
-        isSale: false,
-        regularPrice: 120,
-        salePrice: 0,
-    },
-    {
-        id: 9,
-        categories: [3],
-        name: 'DYMO LabelWriter 450 Turbo Thermal Label Printer',
-        thumbnail: 'images/product_9.png',
-        discount: 0,
-        isNew: false,
-        isSale: false,
-        regularPrice: 410,
-        salePrice: 0,
-    },
-    {
-        id: 10,
-        categories: [3],
-        name: 'Pryma Headphones, Rose Gold & Grey',
-        thumbnail: 'images/product_10.png',
-        discount: 0,
-        isNew: false,
-        isSale: false,
-        regularPrice: 180,
-        salePrice: 0,
+                newData.push(newP);
+            } );
+            callback(newData); } 
+        ).catch(error => console.error('Error:', error));
     }
-];
+}

@@ -14,18 +14,32 @@ import languages from './data/languages';
 import categories from './data/categories';
 import products from './data/products';
 
-const filter = (p, cat = 0) => !cat || p.categories.indexOf(cat) >= 0;
+const filter = (p, cat = 0) => !cat || p.categoryId == cat;
 
 class App extends Component {
     state = {
         languages,
-        categories,
-        products,
+        categories: [],
+        products : [],
         cart : {
             cartUrl : '#',
             itemCount: 2
         },
         selectedCategory: 0
+    }
+    componentDidMount(){
+        products.products((res) => {
+            console.log(res);
+            this.setState({
+                products: res
+            });
+        });
+
+        categories.categories( (res) => {
+            this.setState({
+                categories: res
+            });
+        } );
     }
     filterProducts(cat){
         this.setState({
@@ -33,7 +47,8 @@ class App extends Component {
         });
     }
     render() {
-        const {categories, products, languages, cart, selectedCategory} = this.state;
+        
+        const {categories,languages, cart, selectedCategory, products} = this.state;
         const newProducts = products.filter(p => filter(p, selectedCategory) );
 
         return (

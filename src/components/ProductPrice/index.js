@@ -4,9 +4,9 @@ import './style.css';
 
 class ProductPrice extends PureComponent {
     render() {
-        const {regularPrice, salePrice} = this.props;
+        const {originalPrice, salePrice} = this.props;
         return (
-            !salePrice ? <div className="product_price"><Currency price={regularPrice} /></div> : <div className="product_price"><Currency price={salePrice} /><span><Currency price={regularPrice} /></span></div>
+            salePrice == originalPrice ? <div className="product_price"><Currency price={originalPrice} /></div> : <div className="product_price"><Currency price={salePrice} /><span><Currency price={originalPrice} /></span></div>
         );
     }
 }
