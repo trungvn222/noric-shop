@@ -6,14 +6,10 @@ class Products extends PureComponent {
     render() {
         const {products} = this.props;
         return (
-            <div className="row">
-				<div className="col">
-					<div className="product-grid">
-                    {
-                        products.map(p => <Product key={p.id} {...p} />)
-                    }
-                    </div>
-                </div>
+            <div className="product-grid">
+            {
+                products.map(p => <Product key={p.id} {...p} />)
+            }
             </div>
         );
     }

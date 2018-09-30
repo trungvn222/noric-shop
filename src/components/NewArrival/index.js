@@ -21,7 +21,12 @@ class NewArrival extends PureComponent {
                             <ProductsFilter selectedCategory={selectedCategory} categories={categories} onFilterProducts= { onFilterProducts }/>
                         </div>
                     </div>
-                    <Products products={products} />
+                    <div className="row">
+                        <div className="col">
+                        <Products products={products} />
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         );

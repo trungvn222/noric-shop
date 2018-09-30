@@ -1,0 +1,31 @@
+.product_section_container
+{
+	margin-top: 150px;
+}
+
+.sidebar
+{
+	float: left;
+	width: 200px;
+	padding-right: 17px;
+}
+
+.main_content
+{
+	float: left;
+	width: calc(100% - 200px);
+	padding-left: 34px;
+}
+
+.product-grid
+{
+	width: 100%;
+	margin-top: 57px;
+}
+
+.product-item
+{
+	width: 25%;
+	height: 380px;
+	cursor: pointer;
+}

@@ -8,13 +8,27 @@ import Header from './components/Header';
 import Hamburger from './components/Hamburger';
 import Footer from './components/Footer';
 import Home from './containers/Home';
+import Categories from './containers/Categories';
+
 
 //data
 import languages from './data/languages';
 import categories from './data/categories';
 import products from './data/products';
 
-const filter = (p, cat = 0) => !cat || p.categoryId == cat;
+const filter = (p, cat = 0) => {
+    return !cat || p.category.indexOf(cat) >= 0;
+};
+
+const sortByPrice = (p1, p2) => {
+    let price1 = p1.salePrice ? p1.salePrice : p1.originalPrice;
+    let price2 = p2.salePrice ? p2.salePrice : p2.originalPrice;
+    return price1 - price2;
+}
+
+const sortByName = (p1,p2) => {
+    return p1.name.localeCompare(p2.name);
+}
 
 class App extends Component {
     state = {
@@ -25,13 +39,22 @@ class App extends Component {
             cartUrl : '#',
             itemCount: 2
         },
-        selectedCategory: 0
+        sortList : [
+            { name: 'Default Sort', id : 0 },
+            { name: 'Price', id : 1 },
+            { name: 'Product Name', id : 2 }
+        ],
+        currentSort : { name: 'Default Sort', id : 0 },
+        selectedCategory: 0,
+        postsPerPage : [2,4,8,12],
+        currentPostsPerPage : 10,
+        paged: 1
     }
     componentDidMount(){
+        const { currentPostsPerPage } = this.state;
         products.products((res) => {
-            console.log(res);
             this.setState({
-                products: res
+                products: res,
             });
         });
 
@@ -46,16 +69,77 @@ class App extends Component {
             selectedCategory: cat
         });
     }
+
+    onSort(sort){
+        this.setState({
+            currentSort : sort
+        });
+    }
+
+    onShow(number){
+        this.setState({
+            currentPostsPerPage: number
+        });
+    }
+
+    onPagination(page){
+        this.setState({
+            paged: page
+        });
+    }
+
     render() {
         
-        const {categories,languages, cart, selectedCategory, products} = this.state;
-        const newProducts = products.filter(p => filter(p, selectedCategory) );
+        const {
+            categories,
+            languages, 
+            cart, 
+            selectedCategory, 
+            products, 
+            sortList, 
+            currentSort,
+            postsPerPage,
+            currentPostsPerPage,
+            paged } = this.state;
+            
+        let offset = (currentPostsPerPage * (paged - 1));
+        let limit  = offset + currentPostsPerPage;
+        let newProducts = products.filter(p => filter(p, selectedCategory) );
+        const totalPage = Math.round( newProducts.length/currentPostsPerPage + 0.5 );
+
+        switch( currentSort.id ){
+            case 1 :
+                newProducts = newProducts.sort( sortByPrice );
+                break;
+            case 2 :
+                newProducts = newProducts.sort( sortByName );
+                break;
+        }
+
+        newProducts = newProducts.slice(offset, limit);
+
+        
+
 
         return (
             <div className="super_container">
                 <Header languages={languages} cart={cart} topText='free shipping on all u.s orders over $50' />
                 <Hamburger languages={languages} />
-                <Home categories={categories} selectedCategory={selectedCategory} products={newProducts} onFilterProducts = { this.filterProducts.bind(this) } />
+                <Categories 
+                    onFilterByCategory={ this.filterProducts.bind(this) } 
+                    onSort={ this.onSort.bind(this) }
+                    onShow={ this.onShow.bind(this) }
+                    onPagination= { this.onPagination.bind(this) }
+                    categories={categories} 
+                    products={newProducts} 
+                    selectedCategory={selectedCategory} 
+                    sortList={sortList} 
+                    currentSort={currentSort}
+                    postsPerPage={postsPerPage}
+                    currentPostsPerPage={currentPostsPerPage} 
+                    paged={paged}
+                    total={totalPage}
+                    />
                 <Footer />
             </div>
         );
