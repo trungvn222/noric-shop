@@ -7,7 +7,7 @@ class Pagination extends PureComponent {
         const { total, paged, onPagination } = this.props;
         let items = [];
         for (let index = 1; index <= total ; index++) {
-            items.push( <PaginationItem page={index} onClick={ () => onPagination(index) } /> )
+            items.push( <PaginationItem key={index} page={index} onClick={ () => onPagination(index) } /> )
         }
         if(total == 0){
             return null;

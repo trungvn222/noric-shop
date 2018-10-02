@@ -20,14 +20,21 @@ const filter = (p, cat = 0) => {
     return !cat || p.category.indexOf(cat) >= 0;
 };
 
+const findPrice = p => p.salePrice ? p.salePrice : p.originalPrice;
+
 const sortByPrice = (p1, p2) => {
-    let price1 = p1.salePrice ? p1.salePrice : p1.originalPrice;
-    let price2 = p2.salePrice ? p2.salePrice : p2.originalPrice;
+    let price1 = findPrice(p1);
+    let price2 = findPrice(p2);
     return price1 - price2;
 }
 
 const sortByName = (p1,p2) => {
     return p1.name.localeCompare(p2.name);
+}
+const filterByPrice = (p, min, max) => {
+    var price = findPrice(p);
+
+    return price >= min && price <= max;
 }
 
 class App extends Component {
@@ -48,19 +55,40 @@ class App extends Component {
         selectedCategory: 0,
         postsPerPage : [2,4,8,12],
         currentPostsPerPage : 10,
-        paged: 1
+        paged: 1,
+        minPrice: 0,
+        maxPrice: 0,
+        defaultMinPrice: 0,
+        defaultMaxPrice: 0,
+        loadComplete: false
     }
     componentDidMount(){
-        const { currentPostsPerPage } = this.state;
+        
         products.products((res) => {
+            const { selectedCategory } = this.state;
+            let newProductsTemp = res.filter(p => filter(p, selectedCategory) ).sort(sortByPrice);
+            let minPrice = 0;
+            let maxPrice = 0;
+
+            if(newProductsTemp.length > 0){
+                minPrice = findPrice(newProductsTemp[0]);
+                maxPrice = findPrice(newProductsTemp[newProductsTemp.length - 1]);
+            }
+
             this.setState({
                 products: res,
+                minPrice: minPrice,
+                maxPrice: maxPrice,
+                defaultMinPrice: minPrice,
+                defaultMaxPrice: maxPrice,
+                loadComplete: true
             });
         });
 
         categories.categories( (res) => {
             this.setState({
-                categories: res
+                categories: res,
+                loadComplete: true
             });
         } );
     }
@@ -88,6 +116,13 @@ class App extends Component {
         });
     }
 
+    onFilterByPrice(v){
+        this.setState({
+            minPrice: v[0] || 0,
+            maxPrice: v[1] || 0
+        })
+    }
+
     render() {
         
         const {
@@ -100,12 +135,23 @@ class App extends Component {
             currentSort,
             postsPerPage,
             currentPostsPerPage,
-            paged } = this.state;
-            
+            paged, 
+            minPrice,
+            maxPrice,
+            defaultMinPrice,
+            defaultMaxPrice,
+            loadComplete } = this.state;
+        
+
+        
+        let newProducts = products.filter(p => filter(p, selectedCategory) ).filter( p => filterByPrice(p, minPrice, maxPrice) );
+        let totalPosts  = newProducts.length;
         let offset = (currentPostsPerPage * (paged - 1));
         let limit  = offset + currentPostsPerPage;
-        let newProducts = products.filter(p => filter(p, selectedCategory) );
-        const totalPage = Math.round( newProducts.length/currentPostsPerPage + 0.5 );
+        const totalPage = Math.round( newProducts.length/currentPostsPerPage + 0.4 );
+        
+
+        limit = limit >= totalPosts ? totalPosts : limit;
 
         switch( currentSort.id ){
             case 1 :
@@ -118,18 +164,18 @@ class App extends Component {
 
         newProducts = newProducts.slice(offset, limit);
 
-        
-
+        console.log(loadComplete);
 
         return (
             <div className="super_container">
                 <Header languages={languages} cart={cart} topText='free shipping on all u.s orders over $50' />
                 <Hamburger languages={languages} />
-                <Categories 
+                { newProducts.length > 0 && <Categories 
                     onFilterByCategory={ this.filterProducts.bind(this) } 
                     onSort={ this.onSort.bind(this) }
                     onShow={ this.onShow.bind(this) }
                     onPagination= { this.onPagination.bind(this) }
+                    onFilterByPrice= { this.onFilterByPrice.bind(this) }
                     categories={categories} 
                     products={newProducts} 
                     selectedCategory={selectedCategory} 
@@ -139,7 +185,12 @@ class App extends Component {
                     currentPostsPerPage={currentPostsPerPage} 
                     paged={paged}
                     total={totalPage}
-                    />
+                    limit={limit}
+                    offset={offset + 1}
+                    totalPosts={totalPosts}
+                    defaultMinPrice={defaultMinPrice}
+                    defaultMaxPrice={defaultMaxPrice}
+                    />}
                 <Footer />
             </div>
         );

@@ -8,13 +8,13 @@ class PostsPerPage extends PureComponent {
         return (
             <React.Fragment>
                 <span>Show</span>
-                <span class="num_sorting_text">{current}</span>
-                <i class="fa fa-angle-down"></i>
+                <span className="num_sorting_text">{current}</span>
+                <i className="fa fa-angle-down"></i>
                 {
                     list.length > 0 &&
-                    <ul class="sorting_num">
+                    <ul className="sorting_num">
                         {
-                            list.map( i =>  <PostsPerPageItem number={i} onClick={ () => onSelect(i) } /> )
+                            list.map( i =>  <PostsPerPageItem key={i} number={i} onClick={ () => onSelect(i) } /> )
                         }
                     </ul>
                 }

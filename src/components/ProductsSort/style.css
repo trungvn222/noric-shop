@@ -1,3 +1,11 @@
+.product_sorting_container_bottom
+{
+	margin-top: 24px;
+}
+.product_sorting_container_bottom .product_sorting
+{
+	float: right;
+}
 .product_sorting
 {
 	display: inline-block;

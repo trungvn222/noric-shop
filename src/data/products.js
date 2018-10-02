@@ -5,7 +5,6 @@ export default {
             return res.json()
         } ).then( res => { 
             var newData = [];
-            console.log(res.body);
             res.body.length && res.body.map( (p) => {
                 var newP = p;
                 newP['discount'] = p.originalPrice - p.salePrice;
