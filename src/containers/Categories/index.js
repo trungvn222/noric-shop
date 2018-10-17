@@ -66,7 +66,7 @@ class Categories extends PureComponent {
                                                 </ul>
                                                 <Pagination paged={paged} total={total} onPagination={onPagination} />
                                             </div>
-                                            { <Products products={products} /> }
+                                            { products.length > 0 && <Products products={products} /> }
                                             <div className="product_sorting_container product_sorting_container_bottom clearfix">
                                                 <ul className="product_sorting">
                                                     <li>
