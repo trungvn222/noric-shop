@@ -9,7 +9,7 @@ class Header extends PureComponent {
         const { languages, topText, cart } = this.props;
         return (
             <header className="header trans_300">
-                <TopNavigation languages={languages} text={topText}/>
+                <TopNavigation text={topText}/>
                 <div className="main_nav_container">
                     <div className="container">
                         <div className="row">

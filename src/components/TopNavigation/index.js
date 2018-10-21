@@ -5,7 +5,7 @@ import './style.css';
 
 class TopNavigation extends PureComponent {
     render() {
-        const { languages, text } = this.props;
+        const { text } = this.props;
         return (
             <div className="top_nav">
                 <div className="container">
@@ -18,7 +18,7 @@ class TopNavigation extends PureComponent {
                                 <ul className="top_nav_menu">
                                     {/* Currency / Language / My Account */}
                                     <li className="language">
-                                        <Languages languages={languages} />
+                                        <Languages />
                                     </li>
                                     <li className="account">
                                         <Account />

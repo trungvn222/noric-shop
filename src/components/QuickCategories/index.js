@@ -5,8 +5,8 @@ import './style.css';
 
 class QuickCategories extends PureComponent {
     render() {
-        const {categories} = this.props;
-        if(categories.length == 0){
+        const {categories = []} = this.props;
+        if(!categories.length){
             return null;
         }
         return (
