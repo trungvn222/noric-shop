@@ -9,7 +9,7 @@ class Pagination extends PureComponent {
         for (let index = 1; index <= total ; index++) {
             items.push( <PaginationItem key={index} page={index} onClick={ () => onPagination(index) } /> )
         }
-        if(total == 0){
+        if(total === 0){
             return null;
         }
         return (

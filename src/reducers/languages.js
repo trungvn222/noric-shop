@@ -1,12 +1,16 @@
 import { LANG_ACTION } from '../actions';
-const languages = ( state, action) => {
+const initState = {
+    items: []
+};
+const languages = ( state = initState, action) => {
     
     switch(action.type){
-        case LANG_ACTION.FETCH_LANGUAGES : {
-            return action.lang
-        }
+        case LANG_ACTION.FETCH_LANGUAGES : 
+            const items = action.lang;
+            const newState = {...state, items};
+            return newState;
         default : {
-            return [];
+            return state;
         }
     }
 }

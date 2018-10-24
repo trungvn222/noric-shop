@@ -9,7 +9,7 @@ class PaginationItem extends PureComponent {
     render() {
         const { page } = this.props;
         return (
-            <li><a onClick={ this.onClick.bind(this) } href="#">{page}</a></li>
+            <li><a onClick={ this.onClick.bind(this) }>{page}</a></li>
         );
     }
 }

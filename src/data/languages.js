@@ -11,12 +11,7 @@ export default [
         link : '#',
         active : false
     },
-    {
-        code : 'ita',
-        name : 'Italian',
-        link : '#',
-        active : false
-    },
+    
     {
         code : 'ita',
         name : 'Italian',

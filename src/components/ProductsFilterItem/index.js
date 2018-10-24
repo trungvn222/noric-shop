@@ -1,13 +1,15 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import { fetchProducts } from '../../actions/products';
+import {connect} from 'react-redux';
 
 class ProductsFilterItem extends PureComponent {
     clickHandle(e){
         e.preventDefault();
-        this.props.onClick();
+        const {id, dispatch} = this.props;
+        fetchProducts(id)(dispatch);
     }
     render() {
-        const {name, active} = this.props;
+        const {name, active, id} = this.props;
 
         const classes = `grid_sorting_button button d-flex flex-column justify-content-center align-items-center ${ active ? 'active':'' }`;
         return (
@@ -19,4 +21,6 @@ class ProductsFilterItem extends PureComponent {
     }
 }
 
-export default ProductsFilterItem;
+const mapStateToProps = null;
+const mapDispathToProps = null;
+export default connect(mapStateToProps, mapDispathToProps)(ProductsFilterItem);

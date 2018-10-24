@@ -2,27 +2,30 @@ import React, { PureComponent } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
+import { fetchLanguages } from '../../actions/languages'
 import { bindActionCreators } from 'redux';
-import * as actionLang from '../../actions/languages'
 
 import './style.css';
 
 class Languages extends PureComponent {
 	componentDidMount(){
-		this.props.actionLang.get();
+		fetchLanguages(this.props.dispatch);
 	}
     render() {
 		const {languages = []} = this.props;
+		
+		if(languages.length == 0){
+			return null;
+		}
+
 		const currentLanguage = languages.find( l => l.active );
-		const restLanguages = languages.filter( l => !l.active ).map( l => {
+		const restLanguages = languages.filter( l => !l.active ).map( (l,index) => {
 			return(
 				<li key={l.code}><a href={l.link}>{l.name}</a></li>
 			)
 		} );
 
-		if(languages.length == 0){
-			return null;
-		}
+
 		
         return (
             <React.Fragment>
@@ -38,10 +41,8 @@ class Languages extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-	languages: state.languages	
+	languages: state.languages.items
 })
-const mapDispathToProps = dispatch => ({
-	actionLang: bindActionCreators(actionLang, dispatch)
-});
+const mapDispathToProps = null;
 
 export default connect(mapStateToProps, mapDispathToProps)(Languages);

@@ -6,10 +6,11 @@ import { fetchProducts } from '../../actions/products';
 
 class Products extends PureComponent {
     componentDidMount(){
-        this.props.fetchProducts;
+        const {dispatch} = this.props;
+        fetchProducts()(dispatch);
     }
     render() {
-        const {products = []} = this.props;
+        const {products = [], loading = false} = this.props;
         
         if(!products.length){
             return null;
@@ -17,7 +18,7 @@ class Products extends PureComponent {
         return (
             <div className="product-grid">
             {
-                products.map(p => <Product key={p.id} {...p} />)
+                loading ? <div className="loading">&nbsp;</div>  :  products.map(p => <Product key={p.id} {...p} />)
             }
             </div>
         );
@@ -25,10 +26,9 @@ class Products extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-    products: state.products.items
+    products: state.products.items,
+    loading: state.products.loading
 })
-const mapDispatchToProps = dispatch => ({
-    fetchProducts: fetchProducts(dispatch)
-});
+const mapDispatchToProps = null;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Products);

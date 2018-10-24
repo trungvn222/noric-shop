@@ -10,7 +10,7 @@ class DealOfTheWeek extends PureComponent {
                 <div className="row align-items-center">
                     <div className="col-lg-6">
                         <div className="deal_ofthe_week_img">
-                            <img src="images/deal_ofthe_week.png" alt />
+                            <img src="images/deal_ofthe_week.png" />
                         </div>
                     </div>
                     <div className="col-lg-6 text-right deal_ofthe_week_col">

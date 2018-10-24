@@ -21,8 +21,6 @@ import Home from './containers/Home';
 
 var store = createStore(reducers);
 
-
-
 class App extends Component {
     render() {
         return (
