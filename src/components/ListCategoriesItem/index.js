@@ -1,16 +1,16 @@
 import React, { PureComponent } from 'react';
+import {Link} from 'react-router-dom';
 
 class ListCategoriesItem extends PureComponent {
-
-    onClick(e){
-        e.preventDefault();
-        this.props.onClick();
+    onClick = (e) => {
+        
+        this.props.onChangeCategory(); 
     }
-
     render() {
-        const { name } = this.props;
+        const { name, link, onChangeCategory } = this.props;
+        
         return (
-            <li><a href="#" onClick={ this.onClick.bind(this) }>{name}</a></li>
+            <li><Link to={link} onClick={this.onClick} >{name}</Link></li>
         );
     }
 }

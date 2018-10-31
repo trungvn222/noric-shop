@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import './style.css';
 
-class Breadcrums extends PureComponent {
+class Breadcrums extends React.Component {
     render() {
-        const { items, delimiter } = this.props
+        const { items = [], delimiter } = this.props
         if(items.length === 0){
             return null;
         }

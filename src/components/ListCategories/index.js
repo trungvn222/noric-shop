@@ -4,12 +4,12 @@ import './style.css';
 
 class ListCategories extends PureComponent {
     render() {
-        const { categories, onFilterByCategory, selectedCategory } = this.props;
+        const { categories, selectedCategory, onChangeCategory } = this.props;
         return (
             <ul className="sidebar_categories">
-                <ListCategoriesItem key={0} name={'All'} onClick={ () => onFilterByCategory(0) } active={ selectedCategory === 0 } />
+                <ListCategoriesItem key={0} name={'All'} link='/category' onChangeCategory={() => { onChangeCategory(0) }} active={ selectedCategory === 0 } />
             {
-                categories && categories.map((cat, index) => <ListCategoriesItem key={cat.id} name={cat.name} onClick={ () => onFilterByCategory(cat.id) } active={ selectedCategory === cat.id } /> )
+                categories && categories.map((cat, index) => <ListCategoriesItem onChangeCategory={() => { onChangeCategory(cat.id) }} key={cat.id} {...cat} active={ selectedCategory === cat.id } /> )
             }
             </ul>
         );

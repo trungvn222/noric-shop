@@ -4,7 +4,7 @@ import './style.css';
 
 class PostsPerPage extends PureComponent {
     render() {
-        const { list, current, onSelect } = this.props;
+        const { list, current, onChangeLimit } = this.props;
         return (
             <React.Fragment>
                 <span>Show</span>
@@ -14,7 +14,7 @@ class PostsPerPage extends PureComponent {
                     list.length > 0 &&
                     <ul className="sorting_num">
                         {
-                            list.map( i =>  <PostsPerPageItem key={i} number={i} onClick={ () => onSelect(i) } /> )
+                            list.map( i =>  <PostsPerPageItem key={i} number={i} onClick={ () => onChangeLimit(i) } /> )
                         }
                     </ul>
                 }

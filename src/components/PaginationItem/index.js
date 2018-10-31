@@ -1,15 +1,18 @@
 import React, { PureComponent } from 'react';
+import {Link} from 'react-router-dom';
 
 
 class PaginationItem extends PureComponent {
     onClick(e){
-        e.preventDefault();
         this.props.onClick();
     }
     render() {
-        const { page } = this.props;
+        const { page, baseUrl } = this.props;
+        
         return (
-            <li><a onClick={ this.onClick.bind(this) }>{page}</a></li>
+            <li>
+                <Link to={`${baseUrl}/page/${page}`} onClick={ this.onClick.bind(this) }>{page}</Link>
+            </li>
         );
     }
 }

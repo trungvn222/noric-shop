@@ -19,6 +19,7 @@ const mappingProduct = products => {
         newP['discount'] = p.originalPrice - p.salePrice;
         newP['isSale'] = (p.originalPrice - p.salePrice) !== 0;
         newP['isNew'] = false;
+        newP['link'] = `product/${p.id}`;
 
         newProducts.push(newP);
     } );
@@ -27,48 +28,29 @@ const mappingProduct = products => {
 }
 
 //FETCH DATA
-
-export const fetchProducts = (cat = 0) => {
+export const fetchProducts = (cat = 0, filter = null) => {
+    
     return dispatch => {
-        let api = !cat ? 'http://api.demo.nordiccoder.com/api/products' : `http://api.demo.nordiccoder.com/api/categories/${cat}/products`;
-
+        let filterStr = filter && JSON.stringify(filter);
+        filterStr = filterStr !== null ? `?filter=${filterStr}` : '';
+        let api = !cat ? `http://api.demo.nordiccoder.com/api/products${filterStr}` : `http://api.demo.nordiccoder.com/api/categories/${cat}/products${filterStr}`;
+        
+        dispatch(fetchProductsBegin());
         return fetch(api)
             .then(handleError)
             .then(res => res.json())
             .then(res => {
                 var newData = mappingProduct(res.body);
-                dispatch(fetchProductsSuccess(newData));
-                return newData;
+                var totalPage = res.pagination ? res.pagination.total : 0;
+                
+                dispatch(fetchProductsSuccess(newData, totalPage));
+                return res;
             })
-            .catch(error => console.log(error) );
+            .catch(error => dispatch(fetchProductsFailure(error)) );
     }
 }
 
-export const fetchCategory = dispatch => {
-    dispatch(fetchProductsBegin());
-    return fetch('http://api.demo.nordiccoder.com/api/categories')
-    .then(res => res.json())
-    .then(res => {
-        if(res.body.length > 0){
-            var categories = [];
-            res.body.map( (cat, index) => {
-                let catNew = {...cat, thumbnail: `images/banner_${(index + 1)}.jpg` };
-                categories.push(catNew);
-            } )
-            dispatch(fetchCategorySuccess(categories));
-        }
-        return res;
-    })
-    .catch( error => dispatch(fetchProductsFailure(error)) );
-}
-
-
 //ACTION
-export const fetchCategorySuccess = categories => ({
-    type: PRODUCT_CATEGORY_ACTION.FETCH_PRODUCT_CATEGORY_SUCCESS,
-    items: categories,
-});
-
 export const fetchProductsBegin = () => ({
     type: PRODUCT_ACTION.FETCH_PRODUCTS_BEGIN,
     payload: {
@@ -78,13 +60,14 @@ export const fetchProductsBegin = () => ({
         message: 'Loading'
     }
 })
-export const fetchProductsSuccess = products => ({
+export const fetchProductsSuccess = (products, totalPage) => ({
     type: PRODUCT_ACTION.FETCH_PRODUCTS_SUCCESS,
     payload: {
         items: products,
         loading: false,
         error: false,
-        message: ''
+        message: '',
+        totalPage
     }
 });
 export const fetchProductsFailure = message => ({

@@ -4,10 +4,10 @@ import './style.css';
 
 class Pagination extends PureComponent {
     render() {
-        const { total, paged, onPagination } = this.props;
+        const { total, paged, onChangePagination, baseUrl = '' } = this.props;
         let items = [];
         for (let index = 1; index <= total ; index++) {
-            items.push( <PaginationItem key={index} page={index} onClick={ () => onPagination(index) } /> )
+            items.push( <PaginationItem key={index} page={index} baseUrl={baseUrl} onClick={ () => onChangePagination(index) } /> )
         }
         if(total === 0){
             return null;

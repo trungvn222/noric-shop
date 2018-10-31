@@ -4,7 +4,6 @@ import './style.css';
 class QuickCategory extends PureComponent {
     render() {
         const {thumbnail, name, link} = this.props;
-        console.log(this.props);
         const style = {
             backgroundImage : `url(${thumbnail})`
         };

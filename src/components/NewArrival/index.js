@@ -5,7 +5,7 @@ import './style.css';
 
 class NewArrival extends PureComponent {
     render() {
-        const { categories, onFilterProducts, selectedCategory } = this.props;
+        const { categories, products, onChangeCategory, selectedCategory } = this.props;
         return (
             <div className="new_arrivals">
                 <div className="container">
@@ -18,12 +18,12 @@ class NewArrival extends PureComponent {
                     </div>
                     <div className="row align-items-center">
                         <div className="col text-center">
-                            <ProductsFilter selectedCategory={selectedCategory} categories={categories} onFilterProducts= { onFilterProducts }/>
+                            <ProductsFilter onChangeCategory={onChangeCategory} categories={categories} selectedCategory={selectedCategory} />
                         </div>
                     </div>
                     <div className="row">
                         <div className="col">
-                        <Products />
+                            <Products products={products} />
                         </div>
                     </div>
                     
