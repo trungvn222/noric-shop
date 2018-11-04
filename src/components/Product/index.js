@@ -3,13 +3,13 @@ import ProductThumbnail from '../ProductThumbnail';
 import ProductStatus from '../ProductStatus';
 import ProductTitle from '../ProductTitle';
 import ProductPrice from '../ProductPrice';
-import './style.css';
+import style from './style.css';
 
 class Product extends PureComponent {
     render() {
-        const {thumbnail, sale, originalPrice, salePrice, name, link, isNew, isSale, discount} = this.props;
+        const {thumbnail, originalPrice, salePrice, name, link, isNew, isSale, discount} = this.props;
         return (
-            <div className="product-item men">
+            <div className={style.productItem}>
                 <div className="product discount product_filter">
                     <ProductThumbnail thumbnail={thumbnail} alt={name} />
                     <div className="favorite favorite_left"></div>
@@ -20,7 +20,7 @@ class Product extends PureComponent {
                         <ProductPrice originalPrice={originalPrice} salePrice={salePrice} />
                     </div>
                 </div>
-                <div className="red_button add_to_cart_button"><a href="#">add to cart</a></div>
+                <div className={`red_button ${style.add_to_cart_button}`}><a href="#">add to cart</a></div>
             </div>
 
         );

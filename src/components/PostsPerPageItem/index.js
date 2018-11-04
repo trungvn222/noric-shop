@@ -6,7 +6,7 @@ class PostsPerPageItem extends PureComponent {
         this.props.onClick();
     }
     render() {
-        const { number } = this.props;
+        const { number} = this.props;
         return (
             <li className="num_sorting_btn"><a onClick={ this.onClick.bind(this) }>{number}</a></li>
         );
