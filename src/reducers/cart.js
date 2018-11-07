@@ -2,6 +2,7 @@ import { CART_ACTION } from '../actions';
 
 const initState = {
     totalItems: 0,
+    totalPrice: 0,
     cart: []
 }
 const findItemInCart = (cart = [], productID) => {
@@ -26,6 +27,16 @@ const totalItems = (cart = []) => {
     return total;
 }
 
+const totalPrice = (cart = []) => {
+    let total = 0;
+    if(cart.length > 0){
+        cart.forEach( v => {
+            total += v.quantity * v.product.salePrice;
+        } )
+    }
+
+    return total;
+}
 const cart = (state = initState, action) => {
     switch(action.type){
         case CART_ACTION.LOAD_CART:
@@ -42,8 +53,10 @@ const cart = (state = initState, action) => {
                 cart.push(item);
             }
             let total = totalItems(cart);
+            let price = totalPrice(cart);
             const newState = {
                 totalItems: total,
+                totalPrice: price,
                 cart
             };
             return newState;
