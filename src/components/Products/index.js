@@ -4,7 +4,7 @@ import './style.css';
 
 class Products extends React.Component {
     render() {
-        const {products = [], loading = false} = this.props;
+        const {products = [], loading = false, addToCart} = this.props;
         
         if(!products.length){
             return null;
@@ -13,7 +13,9 @@ class Products extends React.Component {
             <div className="product-grid">
             {
                 loading ? 
-                <div className="loading">&nbsp;</div>  :  products.map(p => <Product key={p.id} {...p} />)
+                <div className="loading">&nbsp;</div>  :  products.map(p => <Product addToCart={ () => {
+                    addToCart(p);
+                } } key={p.id} {...p} />)
             }
             </div>
         );

@@ -18,7 +18,7 @@ class ProductsSort extends PureComponent {
                     sortList.length > 0 && 
                     <ul className="sorting_type">
                         {
-                            sortList.map( (s,i) => <ProductsSortItem key={i} name={s.name} onClick={ () => onSort(s) } /> )
+                            sortList.map( (s,i) => <ProductsSortItem key={i} name={s.name} onClick={ () => onSort(s.id) } /> )
                         }
                     </ul>
                 }

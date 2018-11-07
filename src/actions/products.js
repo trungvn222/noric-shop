@@ -19,7 +19,7 @@ const mappingProduct = products => {
         newP['discount'] = p.originalPrice - p.salePrice;
         newP['isSale'] = (p.originalPrice - p.salePrice) !== 0;
         newP['isNew'] = false;
-        newP['link'] = `product/${p.id}`;
+        newP['link'] = `/product/${p.id}`;
 
         newProducts.push(newP);
     } );
@@ -42,11 +42,61 @@ export const fetchProducts = (cat = 0, filter = null) => {
             .then(res => {
                 var newData = mappingProduct(res.body);
                 var totalPage = res.pagination ? res.pagination.total : 0;
+
                 
                 dispatch(fetchProductsSuccess(newData, totalPage));
                 return res;
             })
             .catch(error => dispatch(fetchProductsFailure(error)) );
+    }
+}
+
+export const fetchProductDetail = (id) => {
+    return dispatch => {
+        let api = `http://api.demo.nordiccoder.com/api/products/${id}`;
+        return fetch(api)
+            .then(handleError)
+            .then(res => res.json())
+            .then(res => {
+                let product = res.body;
+                let gallery = [];
+                let imageFirst = {
+                    id: 0,
+                    thumbnail: '',
+                    imageFull: ''
+                };
+
+                if(product.thumbnail){
+                    imageFirst.thumbnail = product.thumbnail;
+                }
+                if(product.image){
+                    imageFirst.imageFull = product.image;
+                }
+
+                gallery.push(imageFirst);
+
+                if(product.images.length > 0){
+                    product.images.forEach( (image, index) => {
+                        gallery.push({
+                            id: index + 1,
+                            thumbnail: '',
+                            imageFull: image
+                        });
+                    });
+                }
+
+                if(product.thumbnails.length > 0){
+                    product.thumbnails.forEach( (image, index) => {
+                        gallery[index+1].thumbnail = image;
+                    });
+                }
+
+                product['gallery'] = gallery;
+
+                dispatch(fetchProductDetailSucess(res.body));
+                return res;
+            })
+            .catch(error => console.log(error) )
     }
 }
 
@@ -79,3 +129,10 @@ export const fetchProductsFailure = message => ({
         items: []
     }
 });
+
+export const fetchProductDetailSucess = product => ({
+    type: PRODUCT_ACTION.FETCH_PRODUCT_DETAIL,
+    payload : {
+        item: product
+    }
+})

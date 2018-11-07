@@ -27,14 +27,14 @@ class PriceFilter extends PureComponent {
     }
     render() {
         const { min, max } = this.state;
-        let { minPrice, maxPrice } = this.props;
+        let { minPrice, maxPrice, defaultValue } = this.props;
         
         return (
             <div>
                 <div id="amount">
                     <Currency price={min} />{" - "}<Currency price={max} />
                 </div>
-                <Range  min={minPrice} max={maxPrice} defaultValue={[0, maxPrice]} onAfterChange={ this.onAfterChange.bind(this) } onChange={ this.onChange.bind(this) } />
+                <Range  min={minPrice} max={maxPrice} defaultValue={defaultValue} onAfterChange={ this.onAfterChange.bind(this) } onChange={ this.onChange.bind(this) } />
             </div>
         );
     }

@@ -6,6 +6,10 @@ import ProductPrice from '../ProductPrice';
 import style from './style.css';
 
 class Product extends PureComponent {
+    onClick = (e) => {
+        e.preventDefault();
+        this.props.addToCart();
+    }
     render() {
         const {thumbnail, originalPrice, salePrice, name, link, isNew, isSale, discount} = this.props;
         return (
@@ -20,7 +24,7 @@ class Product extends PureComponent {
                         <ProductPrice originalPrice={originalPrice} salePrice={salePrice} />
                     </div>
                 </div>
-                <div className={`red_button ${style.add_to_cart_button}`}><a href="#">add to cart</a></div>
+                <div className={`red_button ${style.add_to_cart_button}`}><a onClick={this.onClick} href="#">add to cart</a></div>
             </div>
 
         );

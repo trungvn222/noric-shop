@@ -15,38 +15,120 @@ import {connect} from 'react-redux';
 //action
 import { fetchCategory, switchCategory } from '../../actions/categories';
 import { fetchProducts } from '../../actions/products';
-import { addCrumb, findCategoryById } from '../../helper/breadcrums';
-import { loadLimit, changeLimit, resetLimit } from '../../actions/posts-per-page';
-
-//helper
-import { parseFilter, addFilterQueryString } from '../../helper/query';
+import { findCategoryById } from '../../helper/breadcrums';
+import { loadLimit } from '../../actions/posts-per-page';
+import { addItem } from '../../actions/cart';
 
 import './style.css';
 
 const delimiter = <i className="fa fa-angle-right" aria-hidden="true"></i>;
+const findSortById = (list = [], id = 0) => {
+    return list.find( item => item.id === id );
+}
 
 class Categories extends PureComponent {
-    state = {
-        page : 1,
-        limit: 4,
-        cat : 0
+    
+    breadCrums = [
+        {
+            id: 'home',
+            label: 'Home',
+            active: false,
+            url: '/'
+        }
+    ];
+
+    sortList = [
+        {
+            id: 'sort-default',
+            name: 'Sort Default'
+        },
+        {
+            id: 'sort-by-price',
+            name: 'Price',
+        },
+        {
+            id: 'sort-by-name',
+            name: 'Product Name',
+        }
+    ]
+    currentSort = null;
+    baseUrl = '';
+
+    constructor(props){
+        super(props);
+        const {match} = props;
+        this.state = {
+            paged : 1,
+            limit: 4,
+            selectedCategory : 0,
+            selectedSort : 'sort-default',
+            salePrice: [0, 600]
+        };
+        this.baseUrl = match.url.split('/page')[0] || '';
+        this.currentSort = findSortById(this.sortList, this.state.selectedSort);
+        this.addScrum(match.params.id || 0);
     }
     
     filter = () => {
         const { match } = this.props;
-        const { limit, page } = this.state;
+        const { limit, paged, selectedSort, salePrice } = this.state;
 
-        const paged = match.params.page ? parseInt(match.params.page) :  page;
+        const page = match.params.page ? parseInt(match.params.page) :  paged;
+        let order = [];
+        let where = {
+            "and" : [{"salePrice": { 'gt' : salePrice[0] }}, {"salePrice": { 'lte' : salePrice[1] }}] 
+        };
+
+        switch(selectedSort){
+            case 'sort-by-price':
+                order.push('salePrice ASC');
+                break;
+            case 'sort-by-name':
+                order.push('name ASC');
+                break;
+        }
         
-        const filter = { limit, skip: (paged - 1)*limit };
+        const filter = { limit, skip: (page - 1)*limit, order, where };
+        console.log(filter);
         return filter;
     }
 
-    resetFilter = () => {
-        this.setState({
-            page: 1,
+    addScrum = (cat = 0) => {
+        const {categories} = this.props;
+        let category = findCategoryById(categories, cat);
+        if(cat === 0){
+            category = {
+                id: 0,
+                name: 'All',
+                link: '/category'
+            }
+        }
+        if(category !== null){
+            if(this.breadCrums[1] === 'undefined'){
+                this.breadCrums.push({
+                    key: category.id,
+                    label: category.name,
+                    active: true,
+                    url: `category/${category.id}`
+                });
+            }else {
+                this.breadCrums[1] = {
+                    key: category.id,
+                    label: category.name,
+                    active: true,
+                    url: `category/${category.id}`
+                };
+            } 
+        }
+        
+    }
+
+    resetFilter = (filter = {}) => {
+        const newFilter = {...{
+            paged: 1,
             limit: 4
-        });
+        }, ...filter};
+        this.setState(newFilter);
     }
 
     componentDidMount(){
@@ -59,73 +141,98 @@ class Categories extends PureComponent {
     }
 
     onChangeCategory = (cat) => {
-        const {dispatch, history} = this.props;
-
-        this.resetFilter();
-        this.setState({
-            cat: cat
+        this.addScrum(cat);
+        this.resetFilter({
+            selectedCategory: cat
         });
-        dispatch(switchCategory(cat));
     }
 
+
+
     componentDidUpdate(prevProps, prevState, snapshot){
-        const oldPage = prevState.page;
+        const oldPaged = prevState.paged;
         const oldLimit = prevState.limit;
-        const oldCat = prevState.cat;
+        const oldSelectedCategory = prevState.selectedCategory;
+        const oldSelectedSort = prevState.selectedSort;
+        const oldSalePrice = prevState.salePrice;
+
         const { match, dispatch } = this.props;
-        const {limit, page, cat} = this.state;
+        const {limit, paged, selectedCategory, selectedSort, salePrice} = this.state;
         
-        if( oldPage != page || limit != oldLimit || cat != oldCat ){
-            dispatch(fetchProducts(match.params.id || 0, {
-                limit,
-                skip: limit*(page-1)
-            }));
+        if( 
+            oldPaged !== paged 
+            || limit !== oldLimit 
+            || oldSelectedCategory !== selectedCategory 
+            || oldSelectedSort !== selectedSort
+            || oldSalePrice !== salePrice
+        ){
+            const filter = this.filter();
+            dispatch(fetchProducts(selectedCategory, filter));
+        }
+
+        if(oldSelectedCategory !== selectedCategory){
+            this.baseUrl = match.url.split('/page')[0] || '';
         }
     }
 
     onChangeLimit = limit => {
-        const {dispatch, match, history} = this.props;
-        const baseUrl = match.url.split('/page')[0];
-        history.push(baseUrl);
-        this.setState({
+        this.resetFilter({
             limit
         });
     }
 
-    onChangePagination = (page) => {
-        const {dispatch, match } = this.props;
-        const filter = this.filter();
+    onChangePagination = paged => {
+        const {match, history} = this.props;
+        const baseUrl = match.url.split('/page')[0];
+        history.push(baseUrl);
         this.setState({
-            page
+            paged
         });
+    }
+
+    onSort = selectedSort => {
+        const {limit} = this.state
+        this.resetFilter({
+            selectedSort,
+            limit
+        });
+        
+        this.currentSort = findSortById(this.sortList, selectedSort);
+    }
+
+    onFilterByPrice = (salePrice) => {
+        this.resetFilter({
+            salePrice
+        });
+    }
+
+    addToCart = product => {
+        const { dispatch } = this.props;
+        const item = {
+            quantity: 1,
+            product
+        };
+
+        dispatch(addItem(item));
     }
 
     render() {
         const { 
             match,
             categories = [], 
-            products = [], 
-            selectedCategory = 0, 
+            products = [],
             currentSort = {}, 
             onSort,
             sortList = [],
             limitItems = [],
-            offset
+            offset,
+            totalItems = 0
             } = this.props;
-        const { limit, page } = this.state;
-        const totalItems = 32;
-        const paged = match.params.page || page;
-        const totalPage =  Math.round(totalItems/limit + 0.4); 
-        const baseUrl = match.url.split('/page')[0];
 
-        let currentCategory = match.params.id ? findCategoryById(categories)(match.params.id) : null;
-        
-        let crumb = {
-            label : !match.params.id ? 'Shop' : currentCategory !== null ? currentCategory.name : '',
-            active : true,
-            url : match.url
-        }
-        const breadcrums  = addCrumb(crumb);
+
+        const { limit, paged, selectedCategory, salePrice } = this.state;
+        const page = match.params.page || paged;
+        const totalPage =  Math.round(totalItems/limit + 0.4); 
         
         
         return (
@@ -133,13 +240,13 @@ class Categories extends PureComponent {
                 <div className="container product_section_container">
                     <div className="row">
                         <div className="col product_section clearfix">
-                            <Breadcrums items={breadcrums} delimiter={delimiter}  />
+                            <Breadcrums items={this.breadCrums} delimiter={delimiter}  />
                             <div className="sidebar">
                                 <Widget title="Product Category">
                                     <ListCategories onChangeCategory={ this.onChangeCategory } categories={categories} selectedCategory={selectedCategory} />
                                 </Widget>
                                 <Widget title="Filter by Price">
-                                    {/* <PriceFilter minPrice={0} maxPrice={defaultMaxPrice} onFilterByPrice={onFilterByPrice} /> */}
+                                    <PriceFilter defaultValue={salePrice} minPrice={0} maxPrice={1000} onFilterByPrice={this.onFilterByPrice} />
                                 </Widget>
                             </div>
                             <div className="main_content">
@@ -149,15 +256,15 @@ class Categories extends PureComponent {
                                             <div className="product_sorting_container product_sorting_container_top">
                                                 <ul className="product_sorting">
                                                     <li>
-                                                        <ProductsSort onSort={onSort} currentSort={currentSort} sortList={sortList} />
+                                                        <ProductsSort onSort={this.onSort} currentSort={this.currentSort} sortList={this.sortList} />
                                                     </li>
                                                     <li>
                                                         <PostsPerPage list={limitItems} onChangeLimit={ this.onChangeLimit } current={limit} />
                                                     </li>
                                                 </ul>
-                                                <Pagination baseUrl={baseUrl} paged={paged} total={totalPage} onChangePagination={this.onChangePagination} />
+                                                <Pagination baseUrl={this.baseUrl} paged={page} total={totalPage} onChangePagination={this.onChangePagination} />
                                             </div>
-                                            <Products products={products} />
+                                            <Products addToCart={this.addToCart} products={products} />
                                             <div className="product_sorting_container product_sorting_container_bottom clearfix">
                                                 <ul className="product_sorting">
                                                     <li>
@@ -165,7 +272,7 @@ class Categories extends PureComponent {
                                                     </li>
                                                 </ul>
                                                 <span className="showing_results">Showing {offset} – {limit} of {totalItems} results</span>
-                                                <Pagination paged={paged} baseUrl={baseUrl} total={totalPage} onChangePagination={this.onChangePagination} />
+                                                <Pagination paged={page} baseUrl={this.baseUrl} total={totalPage} onChangePagination={this.onChangePagination} />
                                             </div>
 
                                         </div>
@@ -181,15 +288,15 @@ class Categories extends PureComponent {
     }
 }
 
-const mapStateToProps = state => ({
-    products: state.products.items,
-    totalItems: state.products.totalPage,
-    categories: state.categories.items,
-    selectedCategory: state.categories.selectedCategory,
-    products: state.products.items,
-    limitItems: state.limit.items,
-    limit: state.limit.limit,
-    filter: state.filter
-});
+const mapStateToProps = state => {
+    console.log(state);
+    return {
+        products: state.products.items,
+        totalItems: state.products.totalPage,
+        categories: state.categories.items,
+        limitItems: state.limit.items,
+        limit: state.limit.limit,
+    }
+};
 const mapDispatchToProps = null;
 export default connect(mapStateToProps, mapDispatchToProps)(Categories);

@@ -4,6 +4,7 @@ import './style.css';
 class Breadcrums extends React.Component {
     render() {
         const { items = [], delimiter } = this.props
+        console.log('crumbs', items.length, items);
         if(items.length === 0){
             return null;
         }

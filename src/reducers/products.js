@@ -16,7 +16,7 @@ const products = (state = initialState, action) => {
             
             return newState;
         default:
-            return initialState;
+            return state;
     }
 }
 export default products;

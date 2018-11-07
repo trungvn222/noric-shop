@@ -18,6 +18,19 @@ export const fetchCategory = dispatch => {
     .catch( error => console.log(error) );
 }
 
+export const fetchCategoryDetail = id => {
+
+    return dispatch => {
+        return fetch(`http://api.demo.nordiccoder.com/api/categories/${id}`)
+        .then(res => res.json())
+        .then(res => {
+            dispatch(fetchCategoryDetailSuccess(res.body));
+            return res;
+        })
+        .catch( error => console.log(error) );
+    }
+}
+
 export const switchCategory = category => {
     return dispatch => {
         dispatch(switchCategorySuccess(category));
@@ -30,6 +43,13 @@ export const fetchCategorySuccess = categories => ({
         items: categories
     },
 });
+
+export const fetchCategoryDetailSuccess = category =>({
+    type: PRODUCT_CATEGORY_ACTION.FETCH_PRODUCT_CATEGORY_DETAIL_SUCCESS,
+    payload: {
+        item: category
+    }
+})
 
 export const switchCategorySuccess = category => ({
     type: PRODUCT_CATEGORY_ACTION.SWITCH_PRODUCT_CATEGORY,
